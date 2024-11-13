@@ -29,6 +29,16 @@ h1 {
     color: #4CAF50;
     margin-bottom: 40px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 5px #4CAF50, 0 0 10px #4CAF50;
+    }
+    to {
+        text-shadow: 0 0 10px #4CAF50, 0 0 20px #4CAF50;
+    }
 }
 
 .menu {
@@ -46,12 +56,20 @@ button {
     background-color: #4CAF50;
     color: white;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
     min-width: 200px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 button:hover {
     background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.2);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .back-button {
@@ -64,20 +82,26 @@ button:hover {
 }
 
 #gameCanvas {
-    border: 2px solid #4CAF50;
+    border: 3px solid #4CAF50;
     background-color: #000000;
     margin: 20px 0;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
 }
 
 .score-container {
     font-size: 24px;
     margin-bottom: 20px;
+    color: #4CAF50;
+    text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
 }
 
 #gameOverScreen {
     background-color: rgba(0,0,0,0.9);
     padding: 40px;
     border-radius: 10px;
+    border: 2px solid #4CAF50;
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
 }
 
 #playerName {
@@ -87,6 +111,14 @@ button:hover {
     width: 200px;
     border: none;
     border-radius: 5px;
+    background-color: rgba(255,255,255,0.1);
+    color: #fff;
+    border: 1px solid #4CAF50;
+}
+
+#playerName:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
 }
 
 #leaderboardList {
@@ -96,6 +128,7 @@ button:hover {
     background-color: rgba(255,255,255,0.1);
     border-radius: 5px;
     padding: 20px;
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.2);
 }
 
 #leaderboardList div {
@@ -104,4 +137,9 @@ button:hover {
     background-color: rgba(255,255,255,0.05);
     border-radius: 3px;
     text-align: left;
+    transition: background-color 0.3s ease;
+}
+
+#leaderboardList div:hover {
+    background-color: rgba(255,255,255,0.1);
 }
