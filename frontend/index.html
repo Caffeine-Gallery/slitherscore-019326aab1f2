@@ -5,20 +5,39 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <div class="game-container">
-        <div class="score-container">
-            <div>Score: <span id="score">0</span></div>
-            <div>High Score: <span id="highScore">0</span></div>
+    <div id="gameContainer">
+        <!-- Title Screen -->
+        <div id="titleScreen" class="screen">
+            <h1>Snake Game</h1>
+            <div class="menu">
+                <button id="startGame">Start Game</button>
+                <button id="viewHighscores">View Highscores</button>
+            </div>
         </div>
-        <canvas id="gameCanvas" width="400" height="400"></canvas>
-        <div id="gameOver" class="hidden">
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen hidden">
+            <div class="score-container">
+                <div>Score: <span id="score">0</span></div>
+            </div>
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+            <button id="backToMenu" class="back-button">Back to Menu</button>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameOverScreen" class="screen hidden">
             <h2>Game Over!</h2>
+            <p>Final Score: <span id="finalScore">0</span></p>
             <input type="text" id="playerName" placeholder="Enter your name">
             <button id="submitScore">Submit Score</button>
+            <button id="backToMenuFromGameOver" class="back-button">Back to Menu</button>
         </div>
-        <div class="leaderboard">
-            <h3>Leaderboard</h3>
+
+        <!-- Highscores Screen -->
+        <div id="highscoresScreen" class="screen hidden">
+            <h2>Highscores</h2>
             <div id="leaderboardList"></div>
+            <button id="backToMenuFromHighscores" class="back-button">Back to Menu</button>
         </div>
     </div>
     <script type="module" src="index.js"></script>

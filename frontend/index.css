@@ -1,73 +1,107 @@
 body {
+    margin: 0;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    margin: 0;
-    background-color: #f0f0f0;
+    background-color: #1a1a1a;
     font-family: Arial, sans-serif;
+    color: #ffffff;
 }
 
-.game-container {
+#gameContainer {
     text-align: center;
+    width: 100%;
+    max-width: 800px;
 }
 
-.score-container {
-    margin-bottom: 20px;
-    font-size: 20px;
-}
-
-#gameCanvas {
-    border: 2px solid #333;
-    background-color: #fff;
-}
-
-#gameOver {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
+.screen {
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    text-align: center;
 }
 
 .hidden {
-    display: none;
+    display: none !important;
+}
+
+h1 {
+    font-size: 48px;
+    color: #4CAF50;
+    margin-bottom: 40px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    min-width: 200px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.back-button {
+    margin-top: 20px;
+    background-color: #666;
+}
+
+.back-button:hover {
+    background-color: #555;
+}
+
+#gameCanvas {
+    border: 2px solid #4CAF50;
+    background-color: #000000;
+    margin: 20px 0;
+}
+
+.score-container {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+#gameOverScreen {
+    background-color: rgba(0,0,0,0.9);
+    padding: 40px;
+    border-radius: 10px;
 }
 
 #playerName {
-    padding: 5px;
-    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+    margin: 20px 0;
     width: 200px;
-}
-
-#submitScore {
-    padding: 5px 15px;
-    background-color: #4CAF50;
-    color: white;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
-}
-
-.leaderboard {
-    margin-top: 20px;
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 #leaderboardList {
-    text-align: left;
-    max-height: 200px;
-    overflow-y: auto;
+    margin: 20px auto;
+    width: 80%;
+    max-width: 400px;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 5px;
+    padding: 20px;
 }
 
 #leaderboardList div {
-    padding: 5px;
-    border-bottom: 1px solid #eee;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: rgba(255,255,255,0.05);
+    border-radius: 3px;
+    text-align: left;
 }

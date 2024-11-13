@@ -1,7 +1,46 @@
 import { backend } from "declarations/backend";
 
-class Snake {
+class Game {
     constructor() {
+        this.setupEventListeners();
+        this.showScreen('titleScreen');
+        this.gameLoop = null;
+        this.score = 0;
+    }
+
+    setupEventListeners() {
+        // Menu buttons
+        document.getElementById('startGame').addEventListener('click', () => this.startGame());
+        document.getElementById('viewHighscores').addEventListener('click', () => this.showHighscores());
+        
+        // Back buttons
+        document.getElementById('backToMenu').addEventListener('click', () => this.returnToMenu());
+        document.getElementById('backToMenuFromGameOver').addEventListener('click', () => this.returnToMenu());
+        document.getElementById('backToMenuFromHighscores').addEventListener('click', () => this.returnToMenu());
+        
+        // Game over screen
+        document.getElementById('submitScore').addEventListener('click', () => this.submitScore());
+        
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (this.gameLoop) this.handleKeyPress(e);
+        });
+    }
+
+    showScreen(screenId) {
+        ['titleScreen', 'gameScreen', 'gameOverScreen', 'highscoresScreen'].forEach(id => {
+            document.getElementById(id).classList.add('hidden');
+        });
+        document.getElementById(screenId).classList.remove('hidden');
+    }
+
+    startGame() {
+        this.showScreen('gameScreen');
+        this.initializeGame();
+        this.startGameLoop();
+    }
+
+    initializeGame() {
         this.canvas = document.getElementById('gameCanvas');
         this.ctx = this.canvas.getContext('2d');
         this.gridSize = 20;
@@ -9,14 +48,7 @@ class Snake {
         this.direction = {x: 0, y: 0};
         this.food = this.generateFood();
         this.score = 0;
-        this.gameOver = false;
-        this.gameLoop = null;
-
-        document.addEventListener('keydown', this.handleKeyPress.bind(this));
-        document.getElementById('submitScore').addEventListener('click', this.submitScore.bind(this));
-        
-        this.updateLeaderboard();
-        this.startGame();
+        document.getElementById('score').textContent = '0';
     }
 
     generateFood() {
@@ -42,46 +74,19 @@ class Snake {
         }
     }
 
-    async submitScore() {
-        const playerName = document.getElementById('playerName').value;
-        if (playerName) {
-            await backend.addScore(playerName, this.score);
-            await this.updateLeaderboard();
-            document.getElementById('gameOver').classList.add('hidden');
-            this.resetGame();
-        }
-    }
-
-    async updateLeaderboard() {
-        const scores = await backend.getHighScores();
-        const leaderboardList = document.getElementById('leaderboardList');
-        leaderboardList.innerHTML = '';
-        scores.forEach((score, index) => {
-            const div = document.createElement('div');
-            div.textContent = `${index + 1}. ${score.name}: ${score.score}`;
-            leaderboardList.appendChild(div);
-        });
-    }
-
     update() {
         const head = {
             x: this.snake[0].x + this.direction.x,
             y: this.snake[0].y + this.direction.y
         };
 
-        // Check for collisions
-        if (
-            head.x < 0 || head.x >= this.canvas.width / this.gridSize ||
-            head.y < 0 || head.y >= this.canvas.height / this.gridSize ||
-            this.snake.some(segment => segment.x === head.x && segment.y === head.y)
-        ) {
+        if (this.checkCollision(head)) {
             this.endGame();
             return;
         }
 
         this.snake.unshift(head);
 
-        // Check if food is eaten
         if (head.x === this.food.x && head.y === this.food.y) {
             this.score += 10;
             document.getElementById('score').textContent = this.score;
@@ -89,6 +94,16 @@ class Snake {
         } else {
             this.snake.pop();
         }
+    }
+
+    checkCollision(head) {
+        return (
+            head.x < 0 || 
+            head.x >= this.canvas.width / this.gridSize ||
+            head.y < 0 || 
+            head.y >= this.canvas.height / this.gridSize ||
+            this.snake.some(segment => segment.x === head.x && segment.y === head.y)
+        );
     }
 
     draw() {
@@ -115,29 +130,48 @@ class Snake {
         );
     }
 
-    endGame() {
-        clearInterval(this.gameLoop);
-        this.gameOver = true;
-        document.getElementById('gameOver').classList.remove('hidden');
-    }
-
-    resetGame() {
-        this.snake = [{x: 10, y: 10}];
-        this.direction = {x: 0, y: 0};
-        this.food = this.generateFood();
-        this.score = 0;
-        this.gameOver = false;
-        document.getElementById('score').textContent = '0';
-        this.startGame();
-    }
-
-    startGame() {
+    startGameLoop() {
         if (this.gameLoop) clearInterval(this.gameLoop);
         this.gameLoop = setInterval(() => {
             this.update();
             this.draw();
         }, 100);
     }
+
+    endGame() {
+        clearInterval(this.gameLoop);
+        this.gameLoop = null;
+        document.getElementById('finalScore').textContent = this.score;
+        this.showScreen('gameOverScreen');
+    }
+
+    async submitScore() {
+        const playerName = document.getElementById('playerName').value;
+        if (playerName) {
+            await backend.addScore(playerName, this.score);
+            this.showHighscores();
+        }
+    }
+
+    async showHighscores() {
+        const scores = await backend.getHighScores();
+        const leaderboardList = document.getElementById('leaderboardList');
+        leaderboardList.innerHTML = '';
+        scores.forEach((score, index) => {
+            const div = document.createElement('div');
+            div.textContent = `${index + 1}. ${score.name}: ${score.score}`;
+            leaderboardList.appendChild(div);
+        });
+        this.showScreen('highscoresScreen');
+    }
+
+    returnToMenu() {
+        if (this.gameLoop) {
+            clearInterval(this.gameLoop);
+            this.gameLoop = null;
+        }
+        this.showScreen('titleScreen');
+    }
 }
 
-new Snake();
+new Game();
